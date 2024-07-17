@@ -1,14 +1,18 @@
-from flask import render_template, request, redirect, url_for
-from app import app
+from flask import Blueprint, render_template, request, redirect, url_for
 
-posts = []
+main = Blueprint('main', __name__)
 
-@app.route('/', methods=['GET', 'POST'])
+users = []
+
+@main.route('/')
 def index():
-    if request.method == 'POST':
-       title = request.form['title']
-       content = request.form['content']
-       if title and content:
-           posts.append({'title': title, 'content': content})
-           return redirect(url_for('index'))
-    return render_template('blog.html', posts=posts)
+    return render_template('index.html', users=users)
+
+@main.route('/submit', methods=['POST'])
+def submit():
+    name = request.form.get('name')
+    age = request.form.get('age')
+    city = request.form.get('city')
+    hobby = request.form.get('hobby')
+    users.append({'name': name, 'age': age, 'city': city, 'hobby': hobby})
+    return redirect(url_for('main.index'))
